@@ -13,12 +13,11 @@ const Preloader = () => {
   useEffect(() => {
     const tl = gsap.timeline({
       onComplete: () => {
-        // Optionally, hide the preloader after the animation
         if (containerRef.current) {
           gsap.to(containerRef.current, {
             duration: 0.5,
             opacity: 0,
-            display: "none", // or 'visibility: hidden'
+            display: "none", // or 'visibility: hidden' or 'display: none' or 'opacity: 0'
           });
         }
       },
@@ -57,7 +56,7 @@ const Preloader = () => {
   }, []);
 
   return (
-    <div className="pre-landing" ref={containerRef}>
+    <div className="pre-landing orbitron bold" ref={containerRef}>
       <div className="container">
         <div className="text-wrapper">
           <div className="text" ref={text1Ref}>

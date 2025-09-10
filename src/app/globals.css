@@ -1,78 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #000000;
-    overflow: hidden;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: var(--font-exo2), sans-serif;
+}
+link,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Orbitron", sans-serif;
+}
+
+
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+}
+.exo2 {
+  font-family: "Exo2", sans-serif;
 }
 
 .pre-landing {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .container {
-    position: relative;
-    color: #ffffff;
-    font-size: 4.5rem;
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Orbitron', sans-serif;
+  position: relative;
+  color: #ffffff;
+  font-size: 4.5rem;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  text-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Orbitron", sans-serif;
 }
 
 .text-wrapper {
-    overflow: hidden;
-    margin-bottom: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
 }
 
 .text {
-    /* No transform here; GSAP will handle it */
-    opacity: 0;
+  /* No transform here; GSAP will handle it */
+  opacity: 0;
 }
 
 .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: #000000 url('/loadingpagelogo.png') center/contain no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: #000000 url("/loadingpagelogo.png") center/contain no-repeat;
 }
 
 .main-content {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #333333;
-    font-family: 'Orbitron', sans-serif;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #333333;
+  font-family: "Orbitron", sans-serif;
 }
 
 .main-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #000000;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #000000;
 }
 
 .main-content p {
-    font-size: 1.2rem;
-    text-align: center;
-    max-width: 600px;
-    line-height: 1.6;
+  font-size: 1.2rem;
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.6;
 }
