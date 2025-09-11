@@ -10,6 +10,7 @@ const page = () => {
       <Header />
       <div className="orbitron">Helloooo SMC!!!!</div>
       <div>Helloooo SMC!!!!</div>
+      <div>thjis is ajhjsfbuyaw f</div>
     </>
   );
 };
