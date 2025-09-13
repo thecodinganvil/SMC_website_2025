@@ -107,7 +107,6 @@ function normalizeImageSrc(
 ): string | StaticImageData {
   if (!src) return PLACEHOLDER;
   if (typeof src !== "string") {
-    // @ts-expect-error
     if (src?.src) return src;
     return PLACEHOLDER;
   }
