@@ -26,7 +26,8 @@ const teamMembers: TeamMember[] = [
     name: "Mohammed Osman",
     role: "Core team",
     image: "/team/osman.jpg",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com/in/syedadnanali99/",
       twitter: "https://x.com",
@@ -38,7 +39,8 @@ const teamMembers: TeamMember[] = [
     name: "jhwbfibaesi fc",
     role: "",
     image: "/team/",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com",
       twitter: "https://x.com",
@@ -50,7 +52,8 @@ const teamMembers: TeamMember[] = [
     name: "aefjeifa fjk jk",
     role: "",
     image: "/team/",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com",
       twitter: "https://x.com",
@@ -62,7 +65,8 @@ const teamMembers: TeamMember[] = [
     name: "advegavgehdgd",
     role: "",
     image: "/team/",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com",
       twitter: "https://x.com",
@@ -74,7 +78,8 @@ const teamMembers: TeamMember[] = [
     name: "ae ekaeqjnknsj c ",
     role: "",
     image: "/team/",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com",
       twitter: "https://x.com",
@@ -86,7 +91,8 @@ const teamMembers: TeamMember[] = [
     name: "ke evlk d k",
     role: "",
     image: "/team/",
-    about: "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
+    about:
+      "Life moves quickly, often without warning. One day, everything feels familiar and comfortable, and the next, change arrives like a wave. It's easy to feel overwhelmed, but there's beauty in uncertainty. Growth often comes from discomfort, and challenges can reveal hidden strengths. The key is to stay grounded, breathe deeply, and trust the process. Even small steps forward count as progress. Time doesn't stop, but neither does your ability to adapt. Keep learning, keep moving, and remember that every experience shapes who you are becoming. Embrace the journey—it's yours alone, and it's worth every step.",
     socials: {
       linkedin: "https://linkedin.com",
       twitter: "https://x.com",
@@ -101,7 +107,7 @@ function normalizeImageSrc(
 ): string | StaticImageData {
   if (!src) return PLACEHOLDER;
   if (typeof src !== "string") {
-    // @ts-ignore
+    // @ts-expect-error
     if (src?.src) return src;
     return PLACEHOLDER;
   }
@@ -126,7 +132,7 @@ function normalizeImageSrc(
   return PLACEHOLDER;
 }
 
-const Team: React.FC = () => {
+const TeamPage: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const closeModal = () => setSelectedMember(null);
 
@@ -301,4 +307,4 @@ const Team: React.FC = () => {
   );
 };
 
-export default Team;
+export default TeamPage;
