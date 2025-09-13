@@ -1,5 +1,5 @@
 import React from 'react'
-import Preloader from '@/components/preloader/page'
+// import Preloader from '@/components/preloader/page'
 
 
 const page = () => {

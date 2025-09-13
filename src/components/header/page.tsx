@@ -21,7 +21,7 @@ const LINKS = [
   { href: "/contact", label: "Contact Us" },
 ];
 
-// Normal link component with center-out underline + small bulb glow
+// Normal link component with center-out underline
 function NavLink({
   href,
   label,
@@ -104,7 +104,7 @@ export default function Header() {
               <NavLink key={l.href} {...l} active={pathname === l.href} />
             ))}
 
-            {/* Become a Member: same style, pushed to far right with extra gap */}
+            {/* Become a Member: */}
             <NavLink
               href="/join"
               label="Become a Member"

@@ -17,13 +17,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`min-h-screen flex flex-col bg-black text-white ${exo2.variable} ${orbitron.variable}`}>
 
-        {/* Fixed header */}
+        {/* Header */}
         <Header />
 
-        {/* Page content grows and clears header height */}
+        
         <main className="flex-1 pt-20">{children}</main>
 
-        {/* Footer at bottom */}
+        {/* Footer */}
         <Footer />
       </body>
     </html>
