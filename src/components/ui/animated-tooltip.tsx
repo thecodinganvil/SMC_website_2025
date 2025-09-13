@@ -14,13 +14,13 @@ export type AnimatedTooltipItem = {
   id: number | string;
   name: string;
   designation: string;
-  image: string; // public path or remote url
+  image: string; // either "/path/in/public/..." or an absolute https URL
 };
 
 export function AnimatedTooltip({
   items,
-  size = 56, // avatar diameter (px)
-  gap = 8,   // negative overlap (px)
+  size = 56,
+  gap = 8,
 }: {
   items: AnimatedTooltipItem[];
   size?: number;
@@ -33,11 +33,28 @@ export function AnimatedTooltip({
   const rotate = useSpring(useTransform(x, [-100, 100], [-45, 45]), spring);
   const translateX = useSpring(useTransform(x, [-100, 100], [-50, 50]), spring);
 
-  // typed mouse-move (no 'any'), robust center calculation
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relX = e.clientX - rect.left;
     x.set(relX - rect.width / 2);
+  };
+
+  // Simple normalize function: returns valid src string for next/image
+  // If the provided src is falsy or invalid, fall back to placeholder in /public.
+  const normalizeSrc = (src?: string) => {
+    if (!src) return "/images/placeholder-avatar.png"; // <-- add a placeholder to public/
+    src = String(src);
+    // If it's an absolute URL, return as-is.
+    try {
+      const urlObj = new URL(src);
+      // valid absolute URL
+      return urlObj.href;
+    } catch {
+      // not absolute — ensure it starts with '/'
+      if (src.startsWith("/")) return src;
+      // if it looks like a relative path, prefix with '/'
+      return `/${src}`;
+    }
   };
 
   return (
@@ -83,12 +100,13 @@ export function AnimatedTooltip({
               aria-label={item.name}
             >
               <Image
-                src={item.image}
+                src={normalizeSrc(item.image)}
                 alt={item.name}
                 width={size}
                 height={size}
                 className="h-full w-full object-cover object-top"
                 sizes={`${size}px`}
+                // priority={false}
               />
             </div>
           </div>
