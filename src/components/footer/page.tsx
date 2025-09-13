@@ -4,6 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Orbitron } from "next/font/google";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+
+const people = [
+  { id: 1, name: "Mohammed Osman", designation: "Developer", image: "team/osman.JPG" },
+  { id: 2, name: "Abdul Moid", designation: "Developer", image: "/SMCLogo.png" },
+];
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -24,72 +30,109 @@ const LINKS = [
 export default function Footer() {
   return (
     <footer
-      className={`${orbitron.className} relative z-40 mt-16 border-t border-white/10 
-                  bg-black/70 backdrop-blur-lg`}
+      className={`${orbitron.className} relative z-40 mt-8 border-t border-white/10 bg-black/70 backdrop-blur-lg`}
     >
-      <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-start md:justify-between">
-        {/* Left: Logo + tagline */}
-        <div className="flex flex-col items-start md:items-start">
-          <Image
-            src="/SMCLogo.png"
-            alt="SMC Logo"
-            width={200}
-            height={125}
-          />
-          <p className="mt-3 max-w-xs text-sm text-white/70">
+      {/* Tightened padding and grid gap */}
+      <div className="mx-auto max-w-7xl px-6 py-8 grid gap-6 md:grid-cols-3">
+        {/* Left: Logo + tagline + socials */}
+        <div>
+          <Link href="/" className="inline-flex items-center">
+            <Image
+              src="/SMCLogo.png"
+              alt="SMC Logo"
+              width={140}
+              height={140}
+              className="h-10 w-auto md:h-12"
+              priority
+            />
+          </Link>
+
+          <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/70">
             Dream. Dedicate. Develop. — Building ideas into reality with passion and precision.
           </p>
-        </div>
 
-        {/* Middle: Quick Links */}
-        <div className="mt-10 grid grid-cols-2 gap-6 text-sm md:mt-0 md:grid-cols-3">
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-white/80 hover:text-blue-400 transition-colors"
-            >
-              {link.label}
+          {/* Socials under description, smaller + tighter */}
+          <div className="mt-3 flex items-center gap-3 text-white/70">
+            <Link href="#" aria-label="Instagram" className="hover:text-blue-400 transition-colors">
+              <Instagram size={18} />
             </Link>
-          ))}
+            <Link href="#" aria-label="Twitter/X" className="hover:text-blue-400 transition-colors">
+              <Twitter size={18} />
+            </Link>
+            <Link href="#" aria-label="Facebook" className="hover:text-blue-400 transition-colors">
+              <Facebook size={18} />
+            </Link>
+            <Link href="#" aria-label="LinkedIn" className="hover:text-blue-400 transition-colors">
+              <Linkedin size={18} />
+            </Link>
+          </div>
         </div>
 
-        {/* Right: Socials */}
-        <div className="mt-10 flex space-x-6 md:mt-0">
-          <Link
-            href="#"
-            className="text-white/70 hover:text-blue-400 transition-colors"
-            aria-label="Instagram"
+        {/* Middle: Quick Links (2 columns, compact) */}
+        <div>
+          <h4
+            className="relative w-fit mb-2 text-sm font-semibold text-white/90
+                       after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:bg-blue-500"
           >
-            <Instagram size={20} />
-          </Link>
-          <Link
-            href="#"
-            className="text-white/70 hover:text-blue-400 transition-colors"
-            aria-label="Twitter"
+            Quick Links
+          </h4>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 max-w-sm">
+            {LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-white/80 hover:text-blue-400 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: Location (blue underline) */}
+        <div>
+          <h4
+            className="relative w-fit mb-2 text-sm font-semibold text-white/90
+                       after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:bg-blue-500"
           >
-            <Twitter size={20} />
-          </Link>
-          <Link
-            href="#"
-            className="text-white/70 hover:text-blue-400 transition-colors"
-            aria-label="Facebook"
-          >
-            <Facebook size={20} />
-          </Link>
-          <Link
-            href="#"
-            className="text-white/70 hover:text-blue-400 transition-colors"
-            aria-label="LinkedIn"
-          >
-            <Linkedin size={20} />
-          </Link>
+            Location
+          </h4>
+          <address className="not-italic text-sm leading-relaxed text-white/75">
+            MJCET<br />
+            Mount Pleasant, 8-2-249,<br />
+            Road No. 3, Banjara Hills,<br />
+            Hyderabad, Telangana 500034
+          </address>
+
+          <div className="mt-2">
+            <Link
+              href="https://www.google.com/maps/search/?api=1&query=MJCET+Banjara+Hills+Hyderabad+Telangana+500034"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              View on Google Maps →
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Bottom line */}
-      <div className="mt-8 border-t border-white/10 py-6 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} SMC MJ. All rights reserved.
+      {/* Developers row inline with tooltips, smaller + tighter */}
+      <div className="mt-4 flex items-center justify-center gap-3">
+        <span
+          className="relative text-sm font-semibold text-white/90
+                     after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-full after:bg-blue-500"
+        >
+          Developers :
+        </span>
+        <div className="flex flex-row gap-2 scale-90">
+          <AnimatedTooltip items={people} />
+        </div>
+      </div>
+
+      {/* Bottom line, less padding */}
+      <div className="mt-3 border-t border-white/10 py-3 text-center text-xs text-white/50">
+        © {new Date().getFullYear()} IEEE SMC MJCET. All rights reserved.
       </div>
     </footer>
   );
