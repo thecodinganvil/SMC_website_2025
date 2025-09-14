@@ -1,16 +1,124 @@
 "use client";
+
 import React from "react";
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/libs/utils";
-import { IconBrandGithub, IconBrandGoogle, IconMapPin } from "@tabler/icons-react";
+import { IconMapPin } from "@tabler/icons-react";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
+const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+function safeCreateSupabase(): SupabaseClient | null {
+  try {
+    if (!rawUrl || !anonKey) return null;
+    const url = new URL(rawUrl).toString();
+    return createClient(url, anonKey);
+  } catch {
+    return null;
+  }
+}
+
+const supabase = safeCreateSupabase();
+const envOk = Boolean(supabase);
+
+type FormData = {
+  name: string;
+  mail: string;
+  subject: string;
+  message: string;
+};
 
 export default function ContactUs() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // TODO: send to your API / form service
-    console.log("Contact form submitted");
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    mail: "",
+    subject: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setErrorMsg(null);
+  setSubmitted(false);
+
+  if (!formData.name || !formData.mail) {
+    setErrorMsg("Please fill in name and email.");
+    return;
+  }
+  if (!supabase) {
+    setErrorMsg(
+      "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your hosting environment."
+    );
+    return;
+  }
+
+  setIsSubmitting(true);
+  try {
+    const payload = {
+      name: formData.name.trim(),
+      mail: formData.mail.trim(),
+      subject: formData.subject.trim(),
+      message: formData.message.trim(),
+    };
+
+    const { data, error } = await supabase
+      .from("ieeesmc")
+      .insert([payload])
+      .select("id")
+      .single();
+
+    if (error) {
+      const detailParts = [error.message, error.details, error.hint, error.code]
+        .filter(Boolean)
+        .join(" — ");
+      setErrorMsg(detailParts || "Submission failed.");
+      return;
+    }
+
+    setSubmitted(true);
+    setFormData({ name: "", mail: "", subject: "", message: "" });
+  } catch (err: unknown) {
+    const anyErr = err as any;
+    setErrorMsg(
+      anyErr?.message ||
+      anyErr?.error_description ||
+      anyErr?.hint ||
+      "Submission failed."
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+  if (!envOk) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="max-w-lg w-full rounded-xl border border-blue-400/30 bg-blue-50 p-6 text-blue-900">
+          <h2 className="text-xl font-semibold mb-2">Configuration required</h2>
+          <p className="mb-2">
+            Supabase isn’t configured. Set{" "}
+            <code className="mx-1 px-1 bg-blue-100 rounded">NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+            <code className="mx-1 px-1 bg-blue-100 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in
+            your environment, then redeploy.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 md:py-16">
@@ -46,7 +154,6 @@ export default function ContactUs() {
           </div>
 
           <div className="mt-5 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800">
-            {/* Real-time location (embed) */}
             <iframe
               title="MJCET Location Map"
               src="https://www.google.com/maps?q=Muffakham+Jah+College+of+Engineering+and+Technology,+Mount+Pleasant,+8-2-249,+Road+No.+3,+Banjara+Hills,+Hyderabad,+Telangana+500034&output=embed"
@@ -58,7 +165,6 @@ export default function ContactUs() {
           </div>
         </div>
 
-        {/* Right: Contact Form (keeps your card styling vibe) */}
         <div className="shadow-input rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
           <h3 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Send a message
@@ -67,34 +173,76 @@ export default function ContactUs() {
             Fill out the form and we’ll get back to you shortly.
           </p>
 
+          {errorMsg && (
+            <div className="mt-4 rounded-md border border-red-300/40 bg-red-50 p-3 text-sm text-red-800">
+              {errorMsg}
+            </div>
+          )}
+          {submitted && !errorMsg && (
+            <div className="mt-4 rounded-md border border-emerald-300/40 bg-emerald-50 p-3 text-sm text-emerald-800">
+              Thank you! Your message has been sent.
+            </div>
+          )}
+
           <form className="my-8" onSubmit={handleSubmit} noValidate>
             <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
               <LabelInputContainer>
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" placeholder="Your full name" type="text" required />
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  required
+                />
               </LabelInputContainer>
               <LabelInputContainer>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" placeholder="you@example.com" type="email" required />
+                <Label htmlFor="mail">Email</Label>
+                <Input
+                  type="email"
+                  id="mail"
+                  name="mail"
+                  value={formData.mail}
+                  onChange={handleChange}
+                  placeholder="yourmail@gmail.com"
+                  required
+                />
               </LabelInputContainer>
             </div>
 
             <LabelInputContainer className="mb-4">
               <Label htmlFor="subject">Subject</Label>
-              <Input id="subject" name="subject" placeholder="How can we help?" type="text" required />
+              <Input
+                type="text"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="How can we help?"
+              />
             </LabelInputContainer>
 
             <LabelInputContainer className="mb-6">
-              <Label htmlFor="message">Message</Label>
-              <Textarea id="message" name="message" placeholder="Write your message here..." rows={6} required />
+              <Label htmlFor="location">Message</Label>
+              <Textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Write your message here..."
+                rows={4}
+              />
             </LabelInputContainer>
 
             <button
               className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
               type="submit"
               aria-label="Send message"
+              disabled={isSubmitting}
             >
-              Send message →
+              {isSubmitting ? "Sending..." : "Send message →"}
               <BottomGradient />
             </button>
 
