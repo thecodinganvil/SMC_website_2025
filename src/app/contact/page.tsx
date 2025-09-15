@@ -6,32 +6,51 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/libs/utils";
 import { IconMapPin } from "@tabler/icons-react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { PostgrestError } from "@supabase/supabase-js";
 
-
+/* ── Supabase (safe create + env guard) ─────────────────────────────────── */
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 function safeCreateSupabase(): SupabaseClient | null {
   try {
     if (!rawUrl || !anonKey) return null;
-    const url = new URL(rawUrl).toString();
+    const url = new URL(rawUrl).toString(); // avoids "Invalid URL" during prerender
     return createClient(url, anonKey);
   } catch {
     return null;
   }
 }
-
 const supabase = safeCreateSupabase();
 const envOk = Boolean(supabase);
+/* ───────────────────────────────────────────────────────────────────────── */
 
+/* ── Types & helpers (top-level, no `any`) ──────────────────────────────── */
 type FormData = {
   name: string;
   mail: string;
   subject: string;
-  message: string;
+  message: string; // if your table uses `location`, rename here + payload
 };
+
+type ErrorLike = { message?: string; error_description?: string; hint?: string };
+
+function isErrorLike(x: unknown): x is ErrorLike {
+  return typeof x === "object" && x !== null &&
+    ("message" in x || "error_description" in x || "hint" in x);
+}
+
+function getErrorMessage(err: unknown): string {
+  return isErrorLike(err)
+    ? (err.message ?? err.error_description ?? err.hint ?? "Submission failed.")
+    : "Submission failed.";
+}
+
+function formatPostgrestError(e: PostgrestError): string {
+  return [e.message, e.details, e.hint, e.code].filter(Boolean).join(" — ") || "Submission failed.";
+}
+/* ───────────────────────────────────────────────────────────────────────── */
 
 export default function ContactUs() {
   const [formData, setFormData] = useState<FormData>({
@@ -53,65 +72,52 @@ export default function ContactUs() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setErrorMsg(null);
-  setSubmitted(false);
+    e.preventDefault();
+    setErrorMsg(null);
+    setSubmitted(false);
 
-  if (!formData.name || !formData.mail) {
-    setErrorMsg("Please fill in name and email.");
-    return;
-  }
-  if (!supabase) {
-    setErrorMsg(
-      "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your hosting environment."
-    );
-    return;
-  }
-  
-type ErrorLike = { message?: string; error_description?: string; hint?: string };
-
-function isErrorLike(x: unknown): x is ErrorLike {
-  return typeof x === "object" && x !== null &&
-         ("message" in x || "error_description" in x || "hint" in x);
-}
-
-function getErrorMessage(err: unknown): string {
-  return isErrorLike(err)
-    ? (err.message ?? err.error_description ?? err.hint ?? "Submission failed.")
-    : "Submission failed.";
-}
-
-function formatPostgrestError(e: PostgrestError): string {
-  return [e.message, e.details, e.hint, e.code].filter(Boolean).join(" — ") || "Submission failed.";
-}
-
-
-  setIsSubmitting(true);
-  try {
-    const payload = {
-      name: formData.name.trim(),
-      mail: formData.mail.trim(),
-      subject: formData.subject.trim(),
-      message: formData.message.trim(), // if your table uses `location` instead, change this key
-    };
-
-    // If you don't need the inserted id, don't select → no unused `data`
-    const { error } = await supabase.from("ieeesmc2025").insert([payload]);
-
-    if (error) {
-      setErrorMsg(formatPostgrestError(error));
+    if (!formData.name.trim() || !formData.mail.trim()) {
+      setErrorMsg("Please fill in name and email.");
       return;
-    
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.mail.trim())) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+    if (!supabase) {
+      setErrorMsg(
+        "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your hosting environment."
+      );
+      return;
+    }
 
-    setSubmitted(true);
-    setFormData({ name: "", mail: "", subject: "", message: "" });
-  } catch (err: unknown) {
-    setErrorMsg(getErrorMessage(err));
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        name: formData.name.trim(),
+        mail: formData.mail.trim(),
+        subject: formData.subject.trim() || null,
+        message: formData.message.trim() || null, // change to `location` if that's your column
+      };
 
+      // No `.select()` to avoid unused `data` warning; add it if you need the new id
+      const { error } = await supabase.from("ieeesmc2025").insert([payload]);
+
+      if (error) {
+        setErrorMsg(formatPostgrestError(error));
+        return;
+      }
+
+      setSubmitted(true);
+      setFormData({ name: "", mail: "", subject: "", message: "" });
+    } catch (err: unknown) {
+      setErrorMsg(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  /* Env guard — black/blue */
   if (!envOk) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6">
@@ -120,8 +126,8 @@ function formatPostgrestError(e: PostgrestError): string {
           <p className="mb-2">
             Supabase isn’t configured. Set{" "}
             <code className="mx-1 px-1 bg-blue-100 rounded">NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-            <code className="mx-1 px-1 bg-blue-100 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in
-            your environment, then redeploy.
+            <code className="mx-1 px-1 bg-blue-100 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>{" "}
+            in your environment, then redeploy.
           </p>
         </div>
       </div>
@@ -173,6 +179,7 @@ function formatPostgrestError(e: PostgrestError): string {
           </div>
         </div>
 
+        {/* Right: Contact Form */}
         <div className="shadow-input rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
           <h3 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Send a message
@@ -181,6 +188,7 @@ function formatPostgrestError(e: PostgrestError): string {
             Fill out the form and we’ll get back to you shortly.
           </p>
 
+          {/* Alerts */}
           {errorMsg && (
             <div className="mt-4 rounded-md border border-red-300/40 bg-red-50 p-3 text-sm text-red-800">
               {errorMsg}
@@ -233,7 +241,7 @@ function formatPostgrestError(e: PostgrestError): string {
             </LabelInputContainer>
 
             <LabelInputContainer className="mb-6">
-              <Label htmlFor="location">Message</Label>
+              <Label htmlFor="message">Message</Label>
               <Textarea
                 id="message"
                 name="message"
