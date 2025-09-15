@@ -9,14 +9,14 @@ import { IconMapPin } from "@tabler/icons-react";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { PostgrestError } from "@supabase/supabase-js";
 
-/* ── Supabase (safe create + env guard) ─────────────────────────────────── */
+
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 function safeCreateSupabase(): SupabaseClient | null {
   try {
     if (!rawUrl || !anonKey) return null;
-    const url = new URL(rawUrl).toString(); // avoids "Invalid URL" during prerender
+    const url = new URL(rawUrl).toString(); 
     return createClient(url, anonKey);
   } catch {
     return null;
@@ -24,14 +24,12 @@ function safeCreateSupabase(): SupabaseClient | null {
 }
 const supabase = safeCreateSupabase();
 const envOk = Boolean(supabase);
-/* ───────────────────────────────────────────────────────────────────────── */
 
-/* ── Types & helpers (top-level, no `any`) ──────────────────────────────── */
 type FormData = {
   name: string;
   mail: string;
   subject: string;
-  message: string; // if your table uses `location`, rename here + payload
+  message: string; 
 };
 
 type ErrorLike = { message?: string; error_description?: string; hint?: string };
@@ -50,7 +48,6 @@ function getErrorMessage(err: unknown): string {
 function formatPostgrestError(e: PostgrestError): string {
   return [e.message, e.details, e.hint, e.code].filter(Boolean).join(" — ") || "Submission failed.";
 }
-/* ───────────────────────────────────────────────────────────────────────── */
 
 export default function ContactUs() {
   const [formData, setFormData] = useState<FormData>({
@@ -97,11 +94,9 @@ export default function ContactUs() {
         name: formData.name.trim(),
         mail: formData.mail.trim(),
         subject: formData.subject.trim() || null,
-        message: formData.message.trim() || null, // change to `location` if that's your column
+        message: formData.message.trim() || null, 
       };
-
-      // No `.select()` to avoid unused `data` warning; add it if you need the new id
-      const { error } = await supabase.from("ieeesmc2025").insert([payload]);
+      const { error } = await supabase.from("ieeesmc").insert([payload]);
 
       if (error) {
         setErrorMsg(formatPostgrestError(error));
@@ -117,7 +112,6 @@ export default function ContactUs() {
     }
   };
 
-  /* Env guard — black/blue */
   if (!envOk) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6">
