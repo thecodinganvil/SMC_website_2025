@@ -5,9 +5,7 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-      {/* <Preloader/> */}
-      <div>HeLlloo smc!!!!!!<div/>
-      
+      {/* <Preloader/> */}     
     </div>
   )
 }
