@@ -6,6 +6,7 @@ const page = () => {
   return (
     <div>
       {/* <Preloader/> */}
+      <div>HeLlloo smc!!!!!!<div/>
       
     </div>
   )

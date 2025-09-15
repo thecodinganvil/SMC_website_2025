@@ -8,6 +8,7 @@ import { cn } from "@/libs/utils";
 import { IconMapPin } from "@tabler/icons-react";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { PostgrestError } from "@supabase/supabase-js";
+import { Meteors } from "@/components/ui/meteors";
 
 
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -194,7 +195,7 @@ export default function ContactUs() {
             </div>
           )}
 
-          <form className="my-8" onSubmit={handleSubmit} noValidate>
+          <form className="my-8" onSubmit={handleSubmit} noValidate >
             <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
               <LabelInputContainer>
                 <Label htmlFor="name">Name</Label>
