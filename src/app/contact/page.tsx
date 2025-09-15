@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/libs/utils";
 import { IconMapPin } from "@tabler/icons-react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import type { PostgrestError } from "@supabase/supabase-js";
+
 
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -65,6 +67,24 @@ export default function ContactUs() {
     );
     return;
   }
+  
+type ErrorLike = { message?: string; error_description?: string; hint?: string };
+
+function isErrorLike(x: unknown): x is ErrorLike {
+  return typeof x === "object" && x !== null &&
+         ("message" in x || "error_description" in x || "hint" in x);
+}
+
+function getErrorMessage(err: unknown): string {
+  return isErrorLike(err)
+    ? (err.message ?? err.error_description ?? err.hint ?? "Submission failed.")
+    : "Submission failed.";
+}
+
+function formatPostgrestError(e: PostgrestError): string {
+  return [e.message, e.details, e.hint, e.code].filter(Boolean).join(" — ") || "Submission failed.";
+}
+
 
   setIsSubmitting(true);
   try {
@@ -72,33 +92,21 @@ export default function ContactUs() {
       name: formData.name.trim(),
       mail: formData.mail.trim(),
       subject: formData.subject.trim(),
-      message: formData.message.trim(),
+      message: formData.message.trim(), // if your table uses `location` instead, change this key
     };
 
-    const { data, error } = await supabase
-      .from("ieeesmc")
-      .insert([payload])
-      .select("id")
-      .single();
+    // If you don't need the inserted id, don't select → no unused `data`
+    const { error } = await supabase.from("ieeesmc2025").insert([payload]);
 
     if (error) {
-      const detailParts = [error.message, error.details, error.hint, error.code]
-        .filter(Boolean)
-        .join(" — ");
-      setErrorMsg(detailParts || "Submission failed.");
+      setErrorMsg(formatPostgrestError(error));
       return;
-    }
+    
 
     setSubmitted(true);
     setFormData({ name: "", mail: "", subject: "", message: "" });
   } catch (err: unknown) {
-    const anyErr = err as any;
-    setErrorMsg(
-      anyErr?.message ||
-      anyErr?.error_description ||
-      anyErr?.hint ||
-      "Submission failed."
-    );
+    setErrorMsg(getErrorMessage(err));
   } finally {
     setIsSubmitting(false);
   }
